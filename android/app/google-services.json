@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1078894395084",
+    "project_id": "timetable-application-c4ab9",
+    "storage_bucket": "timetable-application-c4ab9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078894395084:android:3c9ed6b684007847544c69",
+        "android_client_info": {
+          "package_name": "com.example.timetable_generation_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoMtpK5ry2NaKCY66hWuffp_5Yr5QGCsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
