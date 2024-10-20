@@ -5,6 +5,7 @@ import 'package:timetable_generation_application/feature/bottom_navigation/contr
 import 'package:timetable_generation_application/feature/bottom_navigation/view/bottom_bar_view.dart';
 import 'package:timetable_generation_application/feature/course/controller/course_controller.dart';
 import 'package:timetable_generation_application/feature/periods/controller/days_periods_controller.dart';
+import 'package:timetable_generation_application/feature/splash_screen.dart';
 import 'package:timetable_generation_application/feature/staff/controller/staff_controller.dart';
 import 'package:timetable_generation_application/feature/subjects/controller/subject_controller.dart';
 import 'package:timetable_generation_application/feature/timetable/controller/timetable_controller.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: BottomBarView(),
+        home: SplashScreen(),
       ),
     );
   }

@@ -13,6 +13,7 @@ class AddStaffScreen extends StatefulWidget {
   final String? email;
   final String? place;
   final String? courseId;
+  final String? image;
 
   const AddStaffScreen(
       {super.key,
@@ -20,7 +21,8 @@ class AddStaffScreen extends StatefulWidget {
       this.staffName,
       this.email,
       this.place,
-      this.courseId}); // To hold course ID for editing
+      this.courseId,
+      this.image}); // To hold course ID for editing
 
   @override
   _AddStaffScreenState createState() => _AddStaffScreenState();
@@ -49,6 +51,8 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       placeController.text = widget.place!;
     }
     selectedCourseId = widget.courseId;
+    Provider.of<StaffController>(context, listen: false).imageUrl =
+        widget.image;
   }
 
   Future<void> _fetchCourses() async {
@@ -81,6 +85,20 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
             key: _formKey,
             child: Column(
               children: [
+                Consumer<StaffController>(builder: (context, provider, _) {
+                  return GestureDetector(
+                      onTap: () {
+                        provider.pickImage();
+                      },
+                      child: provider.imageUrl != null
+                          ? CircleAvatar(
+                              radius: 50,
+                              backgroundImage: NetworkImage(provider.imageUrl!))
+                          : CircleAvatar(
+                              radius: 50,
+                              child: Icon(Icons.add_a_photo, size: 50),
+                            ));
+                }),
                 CustomTextField(
                   controller: nameController,
                   hintText: "Staff Name",
@@ -146,9 +164,18 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                     style: ButtonStyle(
                         backgroundColor:
                             WidgetStatePropertyAll(AppColor.primary)),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate() &&
                           selectedCourseId != null) {
+                        await provider.uploadImage();
+
+                        if (provider.imageUrl == null) {
+                          showSnackBar(
+                              context: context,
+                              message: "Please select a profile picture.");
+                          return;
+                        }
+
                         if (widget.staffId == null) {
                           provider.addStaff(
                             context: context,

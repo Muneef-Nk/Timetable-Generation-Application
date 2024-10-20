@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:timetable_generation_application/core/color/color_constants.dart';
 import 'package:timetable_generation_application/core/config/api.dart';
 import 'package:timetable_generation_application/core/global/helper_function.dart';
@@ -19,7 +23,8 @@ class StaffController with ChangeNotifier {
       'courseId': courseId,
       'courseName': courseName,
       'email': email,
-      'place': place
+      'place': place,
+      'profile': imageUrl
     }).then((value) {
       Navigator.of(context).pop();
 
@@ -86,6 +91,7 @@ class StaffController with ChangeNotifier {
         'courseName': courseName,
         'email': email,
         'place': place,
+        'profile': imageUrl
       });
       showSnackBar(
           context: context,
@@ -147,5 +153,35 @@ class StaffController with ChangeNotifier {
       subjects: assignedSubjects,
       staffName: staffName,
     );
+  }
+
+  // upload image
+  File? image;
+  String? imageUrl;
+
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      uploadImage();
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadImage() async {
+    if (image == null) return;
+
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('staff_profiles/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+    UploadTask uploadTask = storageRef.putFile(image!);
+    TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+
+    imageUrl = downloadUrl;
+    notifyListeners();
   }
 }

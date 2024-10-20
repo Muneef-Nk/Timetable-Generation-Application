@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:timetable_generation_application/core/color/color_constants.dart';
 import 'package:timetable_generation_application/core/config/api.dart';
 import 'package:timetable_generation_application/core/global/helper_function.dart';
@@ -66,11 +67,22 @@ class _StaffListScreenState extends State<StaffListScreen> {
                                     width: 80,
                                     height: 80,
                                     decoration: BoxDecoration(
-                                        // color: AppColor.light,
+                                        color: staff['profile'] != null
+                                            ? AppColor.light
+                                            : AppColor.white,
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child:
-                                        Image.asset('assets/staff_profile.png'),
+                                    child: staff['profile'] != null
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                              staff['profile'],
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Image.asset(
+                                            'assets/staff_profile.png'),
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(
@@ -128,6 +140,8 @@ class _StaffListScreenState extends State<StaffListScreen> {
                                                                     staff.id,
                                                                 staffName: staff[
                                                                     'staffName'],
+                                                                image: staff[
+                                                                    'profile'],
                                                               )));
                                                 } else if (value == 'delete') {
                                                   _deleteStaff(staff.id);
